@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesaj Gönder</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://blog.1a23.com/wp-content/uploads/sites/2/2020/02/Desktop.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            animation: backgroundScroll 60s linear infinite;
+        }
+
+        @keyframes backgroundScroll {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 0;
+            }
+        }
+
+        h1 {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                         0 0 20px rgba(255, 255, 255, 0.8),
+                         0 0 30px rgba(255, 255, 255, 0.8);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #3498db;
+            cursor: pointer;
+            border: 2px solid #27ae60;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s, border 0.3s, box-shadow 0.3s;
+        }
+
+        #sendMessageBtn {
+            background-color: #3498db;
+            border: 2px solid #27ae60;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #deleteMessagesBtn {
+            background-color: #e74c3c;
+            border: 2px solid #c0392b;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #telegramBtn {
+            background-color: #3498db;
+            border: 2px solid #27ae60;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #messageContainer {
+            display: none;
+            margin-top: 5px;
+            text-align: left;
+        }
+
+        #messageLog {
+            margin-top: 20px;
+            color: white;
+        }
+
+        #messageLog p {
+            color: #4CAF50;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5),
+                         0 0 10px rgba(76, 175, 80, 0.5),
+                         0 0 15px rgba(76, 175, 80, 0.5);
+        }
+
+        #userMessage {
+            width: 100%;
+            background-color: gray;
+            border: 2px solid black;
+            padding: 5px;
+            box-sizing: border-box;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>ARAÇ SAHİBİ İLE SOHBET</h1>
+    <button id="sendMessageBtn" onclick="showMessageForm()">Bana Mesaj Gönder</button>
+    <button id="deleteMessagesBtn" onclick="deleteMessages()">Mesajları Sil</button>
+    <br>
+    <button id="telegramBtn" onclick="window.location.href='https://t.me/YourTelegramUsername'">Telegram Adresim</button>
+
+    <div id="messageContainer">
+        <div id="messageLog"></div>
+        <div id="userMessageContainer"></div>
+        <textarea id="userMessage" rows="4" cols="50"></textarea><br>
+        <button onclick="sendMessage()">Gönder</button>
+    </div>
+
+    <script>
+        var storedMessages = JSON.parse(localStorage.getItem("messages")) || [];
+
+        function showMessages() {
+            var messageLog = document.getElementById("messageLog");
+            messageLog.innerHTML = "";
+
+            storedMessages.forEach(function (message, index) {
+                messageLog.innerHTML += "<p><strong>Gönderildi:</strong> " + message + "</p>";
+            });
+        }
+
+        window.onload = showMessages;
+
+        function showMessageForm() {
+            document.getElementById("messageContainer").style.display = "block";
+            navigator.vibrate(500);
+        }
+
+        function sendMessage() {
+            var userMessage = document.getElementById("userMessage").value;
+            if (userMessage.trim() !== "") {
+                storedMessages.push(userMessage);
+                localStorage.setItem("messages", JSON.stringify(storedMessages));
+                showMessages();
+
+                var userMessageContainer = document.getElementById("userMessageContainer");
+                userMessageContainer.innerHTML = "<p>" + userMessage + "</p>";
+                document.getElementById("userMessage").value = "";
+            } else {
+                alert("Lütfen bir ileti girin.");
+            }
+        }
+
+        function deleteMessages() {
+            localStorage.removeItem("messages");
+            storedMessages = [];
+            showMessages();
+        }
+    </script>
+</body>
+</html>
